@@ -1,0 +1,4 @@
+pydantic==1.6.1
+elasticsearch==7.7.1
+elasticsearch-dsl==7.3.0
+Jinja2==2.10

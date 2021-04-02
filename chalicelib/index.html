@@ -1,0 +1,212 @@
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Raleway:300);
+    @import url(https://fonts.googleapis.com/css?family=Lusitana:400,700);
+
+    .align-center {
+        text-align: center;
+    }
+
+    html {
+        height: 100%;
+    }
+
+    body {
+        height: 100%;
+        position: relative;
+    }
+
+    .row {
+        margin: -20px 0;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .row .col {
+        padding: 0 20px;
+        float: left;
+        box-sizing: border-box;
+    }
+
+    .row .col.x-50 {
+        width: 50%;
+    }
+
+    .row .col.x-100 {
+        width: 100%;
+    }
+
+    .content-wrapper {
+        min-height: 100%;
+        position: relative;
+    }
+
+    .get-in-touch {
+        max-width: 650px;
+        margin: 0 auto;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .get-in-touch .title {
+        text-align: center;
+        font-family: Raleway, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 36px;
+        line-height: 48px;
+        padding-bottom: 48px;
+    }
+
+    .contact-form .form-field {
+        position: relative;
+        margin: 32px 0;
+    }
+
+    .contact-form .input-text {
+        display: block;
+        width: 100%;
+        height: 36px;
+        border-width: 0 0 2px 0;
+        border-color: #000;
+        font-family: Lusitana, serif;
+        font-size: 18px;
+        line-height: 26px;
+        font-weight: 400;
+    }
+
+    .contact-form .input-text:focus {
+        outline: none;
+    }
+
+    .contact-form .input-text:focus + .label, .contact-form .input-text.not-empty + .label {
+        transform: translateY(-24px);
+    }
+
+    .contact-form .label {
+        position: absolute;
+        left: 20px;
+        bottom: 11px;
+        font-family: Lusitana, serif;
+        font-size: 18px;
+        line-height: 26px;
+        font-weight: 400;
+        color: #888;
+        cursor: text;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .contact-form .submit-btn {
+        display: inline-block;
+        background-color: #000;
+        color: #fff;
+        font-family: Raleway, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 16px;
+        line-height: 24px;
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .note {
+        position: absolute;
+        left: 0;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+        font-family: Lusitana, serif;
+        font-size: 16px;
+        line-height: 21px;
+    }
+
+    .note .link {
+        color: #888;
+        text-decoration: none;
+    }
+
+    .note .link:hover {
+        text-decoration: underline;
+    }
+
+
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script>
+    function postFunction() {
+        var textboxvalue = document.getElementById("name").value
+        $.ajax(
+            {
+                type: "POST",
+                url: 'https://lsseozf220.execute-api.us-east-1.amazonaws.com/api/sendinfo',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({text: textboxvalue}),
+                success: function () {
+                    Swal.fire(
+                        'Good job!',
+                        'We saved your knowledge!',
+                        'success'
+                    );
+                    document.getElementById("name").value = ''
+                }
+            });
+    }
+</script>
+
+<script>
+    function getFunction() {
+        var textboxvalue = document.getElementById("name").value
+        var tmp = null;
+
+        $.ajax(
+            {
+                type: "POST",
+                url: 'https://lsseozf220.execute-api.us-east-1.amazonaws.com/api/getinfo',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({text: textboxvalue}),
+                success: function (data) {
+                    tmp = data;
+                    var x = ""
+                    try {
+                        for (var item of data) {
+                            x = x + "<p>" + JSON.stringify(item) + "</p>";
+                        }
+                    } catch (e) {
+                        document.getElementById("comment").innerHTML = "";
+                    }
+                    document.getElementById("comment").innerHTML = x;
+                }
+            }
+        );
+        return tmp;
+
+    }
+</script>
+
+
+<section class="get-in-touch">
+    <h1 class="title">Lore</h1>
+    <form class="contact-form row">
+        <div class="form-field col x-100">
+            <input id="name" class="input-text js-input" type="text" name="name" required>
+            <label class="label" for="name">Text</label>
+        </div>
+
+        <div class="form-field col x-100 align-center">
+            <button type="button" class="btn btn-primary" onclick="getFunction()">Search</button>
+            <button type="button" class="btn btn-success" onclick="postFunction()">Add Knowledge</button>
+        </div>
+
+        <div class="form-field col x-100 align-center">
+            <div id="comment"></div>
+        </div>
+    </form>
+</section>
